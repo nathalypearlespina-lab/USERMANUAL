@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MediFlow User Manual · Version 1.3</title>
+<style>
+:root{--purple:#35206f;--purple2:#5e3ca2;--lav:#eee9fb;--ink:#24283a;--muted:#667085;--line:#d9d7e4;--blue:#eaf5fb;--green:#15945b;--yellow:#d49b00;--red:#cf3a3a;--white:#fff}
+*{box-sizing:border-box}body{margin:0;background:#f7f8fb;color:var(--ink);font:15px/1.55 Arial,Helvetica,sans-serif}main{max-width:980px;margin:auto;background:#fff;box-shadow:0 0 28px #2c1b6812}.cover{min-height:520px;padding:42px 52px 36px;position:relative;overflow:hidden;background:linear-gradient(135deg,#fff 0 78%,var(--blue) 78%)}.cover:after{content:"";position:absolute;right:-80px;bottom:-110px;width:310px;height:310px;border-radius:50%;background:#dfe7f4}.tag{display:inline-block;background:var(--purple);color:#fff;border-radius:7px;padding:9px 15px;font-weight:700;letter-spacing:.04em}.cover h1{font-size:54px;line-height:1.02;color:var(--purple);max-width:610px;margin:45px 0 18px}.cover h2{font-size:21px;font-weight:400;color:var(--muted);max-width:590px}.book{position:absolute;right:110px;top:210px;width:155px;height:190px;border-radius:8px 16px 16px 8px;background:var(--purple);color:#fff;box-shadow:10px 12px 0 #d9d7e4;transform:rotate(-7deg);z-index:2;padding:28px 15px;font-weight:700;text-align:center}.book:before{content:"⚙  ⚙";display:block;font-size:35px;margin-bottom:18px}.cd{position:absolute;right:230px;bottom:65px;width:125px;height:125px;border-radius:50%;background:radial-gradient(circle,#fff 0 12%,#a7b1c4 13% 18%,#e8edf4 19% 36%,#8a98ae 37% 43%,#e8edf4 44% 66%,#9ba8bc 67% 100%);z-index:1;box-shadow:5px 8px 10px #66708555}.section{padding:30px 52px}.section h2{color:var(--purple);font-size:25px;margin:0 0 16px;border-left:8px solid var(--purple2);padding-left:12px}.section h3{color:var(--purple);margin:20px 0 7px}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}.card{border:1px solid var(--line);border-radius:12px;padding:18px;background:#fff}.card.lav{background:var(--lav)}.card.blue{background:var(--blue)}.card h3{margin-top:0}.notice{border-left:6px solid var(--red);background:#fff1f1;padding:14px 17px;margin:18px 0}.safe{border-left-color:#7c55be;background:#f5f1ff}.table{width:100%;border-collapse:collapse;margin:10px 0 18px}.table th{background:var(--purple);color:white;text-align:left}.table th,.table td{padding:9px;border:1px solid var(--line);vertical-align:top}.table tr:nth-child(even){background:#faf9fd}.code{font-family:Consolas,monospace;background:#25223a;color:#fff;border-radius:6px;padding:8px 11px;display:inline-block;margin:3px 0}.check li{margin:8px 0}.footer{padding:22px 52px;background:var(--blue);color:var(--muted);font-size:13px}@media print{body{background:#fff}.cover{page-break-after:always}.section{page-break-inside:avoid}main{box-shadow:none}}@media(max-width:700px){.cover,.section,.footer{padding-left:24px;padding-right:24px}.cover h1{font-size:40px}.book{right:34px;top:300px;transform:scale(.75) rotate(-7deg)}.cd{right:130px;bottom:35px;transform:scale(.75)}.grid{grid-template-columns:1fr}}
+
+.manual-meta{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px;color:var(--muted);font-size:13px}
+.kicker{font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--purple2);font-weight:700}
+.small{font-size:13px;color:var(--muted)}
+.section p{margin:8px 0 12px}
+.section ul,.section ol{padding-left:22px}
+.section li{margin:7px 0}
+.table{font-size:14px}
+.warn{border-left-color:var(--yellow);background:#fff9e8}
+.good{border-left-color:var(--green);background:#effaf4}
+.cover .subline{position:relative;z-index:3}
+@media print{.section{page-break-inside:auto}.card,.notice,table{page-break-inside:avoid}}
+</style>
+</head>
+
+<body><main>
+<section class="cover">
+  <span class="tag">USER MANUAL · VERSION 1.3</span>
+  <h1>MediFlow</h1>
+  <h2>Automated IV Dextrose Level Monitor</h2>
+  <p class="subline" style="max-width:560px">Setup, calibration, operation, LCD status messages, serial commands, Wi-Fi dashboard, troubleshooting, and maintenance for the MediFlow educational prototype.</p>
+  <div class="book">USER<br>MANUAL</div><div class="cd"></div>
+  <p style="position:absolute;bottom:28px;left:52px;color:var(--muted);z-index:3"><b>Firmware reference: mediflow_final (4)(1).ino</b></p>
+</section>
+
+<section class="section">
+  <h2>01 · Purpose and Safety</h2>
+  <div class="notice"><b>Important safety notice.</b> MediFlow is an educational prototype, not a certified medical device. It must not be used to make clinical decisions, control an infusion, replace direct clinical observation, or provide unattended patient care. The displayed volume, flow rate, drip rate, and time estimates have not been established as clinically accurate.</div>
+  <div class="grid">
+    <div class="card lav"><h3>What the firmware reports</h3>
+      <ul>
+        <li>Load-cell weight converted to an estimated remaining fluid volume.</li>
+        <li>Estimated remaining percentage based on the configured bag volume.</li>
+        <li>Estimated flow rate, drip rate, and time to empty based on recent volume readings.</li>
+        <li>Status messages for normal, low, critical, empty, stopped-flow, no-bag, and sensor-error conditions on the LCD and dashboard.</li>
+        <li>A local Wi-Fi dashboard with live device data and browser-stored demonstration records.</li>
+      </ul>
+    </div>
+    <div class="card blue"><h3>Required hardware</h3>
+      <ul>
+        <li>ESP32 DevKit</li><li>Load cell and HX711 amplifier</li><li>16 × 2 I²C LCD (configured address 0x27)</li>
+        <li>ESP32 expansion board with clearly labeled D-pins</li>
+        <li>Push button connected to D0</li><li>Optional active buzzer (disabled in this firmware)</li>
+      </ul>
+    </div>
+  </div>
+  <div class="notice safe"><b>Do not rely on the dashboard or alarms as a medical safety system.</b> Check the physical setup, the displayed values, and the sensor condition. If readings are implausible or the sensor reports an error, stop relying on the measurements and investigate the hardware.</div>
+</section>
+
+<section class="section">
+  <h2>02 · Hardware Connections</h2>
+  <p>This project uses an ESP32 expansion board. Use the D-pin labels printed on the board (for example, D21), rather than searching for a header marked “GPIO 21.” The firmware uses the corresponding ESP32 GPIO numbers internally. Board labels can vary, so confirm the silkscreen and board pinout before wiring.</p>
+  <table class="table">
+    <tr><th>Component / signal</th><th>Expansion-board label</th><th>Notes</th></tr>
+    <tr><td>HX711 DOUT / DT</td><td>D16</td><td>Digital data output; firmware pin number is GPIO 16</td></tr>
+    <tr><td>HX711 SCK</td><td>D4</td><td>Clock input; firmware pin number is GPIO 4</td></tr>
+    <tr><td>LCD SDA</td><td>D21</td><td>I²C data; firmware pin number is GPIO 21</td></tr>
+    <tr><td>LCD SCL</td><td>D22</td><td>I²C clock; firmware pin number is GPIO 22</td></tr>
+    <tr><td>Push button</td><td>D0</td><td>Configured with internal pull-up; button reads LOW when pressed</td></tr>
+    <tr><td>Optional physical buzzer</td><td>D14</td><td>Not used in this build; <code>USE_BUZZER</code> is set to 0</td></tr>
+    <tr><td>LCD I²C address</td><td>0x27</td><td>Configured in the firmware; verify if your LCD module differs</td></tr>
+  </table>
+  <div class="notice warn"><b>Load-cell capacity:</b> The firmware defaults to a 1000 mL bag volume and 50 g for the empty bag/tubing weight. A 1000 mL bag plus its container can exceed the capacity of a 1 kg load cell. Use a load cell and mounting hardware with an appropriate rated capacity and safety margin; verify the actual assembled load. Do not exceed any component rating.</div>
+  <p class="small">No external LEDs are required for this hardware setup. The uploaded firmware still contains LED-control code on D25, D26, and D27, but these pins are not used by the described build and no LEDs should be connected for this manual. This table is not a complete wiring diagram: connect power, ground, and the load-cell bridge according to the actual module labels and verified hardware pinout. Do not assume D-labels are identical across every ESP32 expansion board.</p>
+</section>
+
+<section class="section">
+  <h2>03 · First-Time Setup and Calibration</h2>
+  <ol class="check">
+    <li>Install the Arduino IDE and the libraries required by the sketch: <b>HX711</b> and <b>LiquidCrystal_I2C</b>, along with the ESP32 Arduino board support.</li>
+    <li>Open the uploaded <b>mediflow_final (4)(1).ino</b> sketch and select the correct ESP32 board and serial port.</li>
+    <li>With the hook completely empty, power the device. The firmware attempts an automatic tare on first boot when the saved offset is zero. Allow the load cell to settle; the sketch's setup notes recommend about five minutes.</li>
+    <li>Open Serial Monitor at <b>115200 baud</b> and set the line ending to <b>Newline</b>.</li>
+    <li>To tare manually, ensure the hook is empty and send <code>t</code>. Wait for the confirmation message. Do not tare with a bag or other load attached.</li>
+    <li>Place a known calibration weight on the hook and send <code>c 500</code> for a 500 g reference weight, or replace 500 with the actual known weight in grams. Keep the weight still while calibration completes.</li>
+    <li>Send <code>i</code> to view the status, measured weight, estimated volume, flow values, settings, calibration factor, and dashboard address.</li>
+    <li>Set the nominal bag volume using <code>v 1000</code> for a 1000 mL bag, or enter the appropriate configured volume for the prototype test. Ensure the load cell and mounting can support the total load.</li>
+    <li>Confirm the bag-empty weight with <code>e 50</code> only if 50 g is the measured empty bag plus tubing weight. Use the actual measured value for your setup.</li>
+  </ol>
+  <div class="notice safe"><b>Calibration check:</b> After calibration, test at more than one known weight and compare the displayed weight with an independent scale. Repeat calibration if the load cell or mount is moved or replaced. The firmware does not define a validated accuracy tolerance, so do not assume a reading is clinically accurate merely because calibration completes.</div>
+  <p><b>Default values in this firmware:</b> nominal volume 1000 mL, empty bag/tubing weight 50 g, fluid density 1.015 g/mL, drop factor 20 gtt/mL, low threshold 30%, critical threshold 10%, and calibration factor 420 counts/g before calibration. These settings are saved in ESP32 flash. Verify and configure them for each test setup.</p>
+</section>
+
+<section class="section">
+  <h2>04 · LCD Status Messages</h2>
+  <p>This hardware build does not use external status LEDs. Check the LCD and Wi-Fi dashboard for device status.</p>
+  <table class="table">
+    <tr><th>Status</th><th>Meaning</th></tr>
+    <tr><td>Normal / monitoring</td><td>Estimated remaining percentage is above the low threshold and no higher-priority status applies.</td></tr>
+    <tr><td>Low</td><td>Estimated remaining percentage is at or below the configured low threshold (default 30%), but not at critical level.</td></tr>
+    <tr><td>Critical</td><td>Estimated remaining percentage is at or below the configured critical threshold (default 10%).</td></tr>
+    <tr><td>Flow stopped</td><td>The firmware has not detected sufficient estimated flow for the configured timeout (3 minutes).</td></tr>
+    <tr><td>Empty</td><td>Estimated remaining volume is 5 mL or less.</td></tr>
+    <tr><td>Sensor error</td><td>HX711 readings are missing or invalid/saturated for the firmware's fault criteria.</td></tr>
+    <tr><td>No bag / standby</td><td>The measured weight is below the configured no-bag condition.</td></tr>
+  </table>
+  <p>The LCD shows a fluid label, estimated volume, and percentage. Its second line cycles approximately every three seconds through flow rate (mL/h), drip rate (gtt/min), and estimated time to empty. Critical, stopped-flow, and empty messages can take priority over some display pages. With no bag it shows a ready message; with a sensor error it shows a sensor warning.</p>
+  <div class="notice warn"><b>Interpretation:</b> These are firmware status categories, not validated clinical alarms. The stopped-flow state is inferred from the load-cell trend and can be affected by bag movement, setup changes, and sensor noise.</div>
+</section>
+
+<section class="section">
+  <h2>05 · Daily Operation</h2>
+  <div class="grid">
+    <div class="card"><h3>Start monitoring a bag</h3>
+      <ol>
+        <li>Check that the hook, load cell, wires, and mount are secure.</li>
+        <li>Hang the bag without allowing the bag, tubing, or nearby objects to rest on another surface or pull on the load cell.</li>
+        <li>Wait for the weight reading to settle and check the displayed values.</li>
+        <li>Send <code>b</code> in Serial Monitor, or hold the button for more than 3 seconds and release it, to reset the firmware's infusion tracking for a new bag.</li>
+        <li>Observe the device during prototype testing. Do not use it as a substitute for standard clinical monitoring.</li>
+      </ol>
+    </div>
+    <div class="card"><h3>Button controls</h3>
+      <table class="table"><tr><th>Action</th><th>Function</th></tr>
+        <tr><td>Press and release for more than 50 ms and up to 3 seconds</td><td>Toggle the firmware mute state.</td></tr>
+        <tr><td>Hold for more than 3 seconds and up to 8 seconds, then release</td><td>Start a new bag / reset infusion tracking.</td></tr>
+        <tr><td>Hold for more than 8 seconds, then release</td><td>Tare the empty hook. Remove the bag first.</td></tr>
+      </table>
+      <p class="small">The firmware handles button actions on release. The physical buzzer is disabled in this build, so muting does not disable the browser's independent dashboard sound setting.</p>
+    </div>
+  </div>
+  <h3>Flow rate and time estimates</h3>
+  <p>The firmware samples flow history every 5 seconds and retains up to 24 samples (about two minutes of history). A flow-rate estimate is based on the trend in recent estimated volume readings. It can take time for the trend to become meaningful; bag movement or a large reading change resets the analysis. Time-to-empty is an estimate, not a guaranteed prediction.</p>
+</section>
+
+<section class="section">
+  <h2>06 · Serial Command Reference</h2>
+  <p>Enter commands in Serial Monitor at 115200 baud with Newline enabled. Commands are case-insensitive. After a command, check for an <code>[OK]</code> or error message. Invalid or unrecognized commands display the help list.</p>
+  <table class="table">
+    <tr><th>Command</th><th>Function</th><th>Example / notes</th></tr>
+    <tr><td><code>t</code></td><td>Tare</td><td>Remove the bag and empty the hook first.</td></tr>
+    <tr><td><code>c &lt;grams&gt;</code></td><td>Calibrate using a known weight</td><td><code>c 500</code> for a known 500 g weight on the hook.</td></tr>
+    <tr><td><code>v &lt;mL&gt;</code></td><td>Set nominal bag volume</td><td><code>v 1000</code></td></tr>
+    <tr><td><code>e &lt;grams&gt;</code></td><td>Set empty bag plus tubing weight</td><td><code>e 50</code> only if the measured empty assembly is 50 g.</td></tr>
+    <tr><td><code>d &lt;g/mL&gt;</code></td><td>Set fluid density</td><td><code>d 1.015</code>. Firmware accepts values greater than 0.9 and less than 1.5.</td></tr>
+    <tr><td><code>f &lt;gtt/mL&gt;</code></td><td>Set drop factor used for estimated drip rate</td><td><code>f 20</code>; the help text lists 10, 15, 20, or 60.</td></tr>
+    <tr><td><code>l &lt;pct&gt;</code></td><td>Set low-level threshold</td><td><code>l 30</code>; accepted range is greater than 0 and less than 100.</td></tr>
+    <tr><td><code>k &lt;pct&gt;</code></td><td>Set critical-level threshold</td><td><code>k 10</code>; accepted range is greater than 0 and less than 100.</td></tr>
+    <tr><td><code>n &lt;name&gt;</code></td><td>Set fluid label</td><td><code>n D10</code>. LCD display field is limited; use a short label.</td></tr>
+    <tr><td><code>b</code></td><td>Start a new bag / reset infusion tracking</td><td>Resets the flow history and infused-volume tracking.</td></tr>
+    <tr><td><code>m</code></td><td>Toggle mute state</td><td>Changes the firmware mute flag; physical buzzer is disabled in this build.</td></tr>
+    <tr><td><code>i</code></td><td>Print status and settings</td><td>Also prints the dashboard address when Wi-Fi is enabled.</td></tr>
+    <tr><td><code>r</code></td><td>Print a raw HX711 reading</td><td>Useful for hardware troubleshooting.</td></tr>
+  </table>
+  <div class="notice warn"><b>Input validation:</b> The firmware applies basic range checks, not full clinical validation. Confirm every setting after changing it by sending <code>i</code>.</div>
+</section>
+
+<section class="section">
+  <h2>07 · Wi-Fi Dashboard</h2>
+  <h3>Connect in hotspot mode</h3>
+  <ol>
+    <li>By default, <code>WIFI_SSID</code> and <code>WIFI_PASSWORD</code> are blank, so the ESP32 starts its own Wi-Fi hotspot.</li>
+    <li>On your phone or computer, connect to Wi-Fi network <b>MediFlow</b> using password <b>mediflow123</b>.</li>
+    <li>Read the IP address shown on the LCD or in Serial Monitor. In the default ESP32 access-point configuration this is commonly <code>192.168.4.1</code>; use the address actually shown by the device.</li>
+    <li>Open a browser on the connected device and enter <code>http://</code> followed by that IP address.</li>
+  </ol>
+  <h3>Connect through a router</h3>
+  <ol>
+    <li>Edit <code>WIFI_SSID</code> and <code>WIFI_PASSWORD</code> near the top of the Arduino sketch, then upload the sketch.</li>
+    <li>The firmware attempts to connect for up to 12 seconds. If it cannot connect, it falls back to the MediFlow hotspot.</li>
+    <li>When router mode succeeds, use the IP address shown on the LCD or in Serial Monitor. Your computer or phone must be on a network that can reach the ESP32.</li>
+  </ol>
+  <h3>Dashboard features and limitations</h3>
+  <ul>
+    <li>The dashboard shows the current device measurements and status and provides New bag, Mute, and Tare controls.</li>
+    <li>The dashboard also includes demonstration screens for ward entries, patient admission, IV history, and discharged records.</li>
+    <li>These patient and event records are stored in the browser's local storage, not in a centralized database on the ESP32. They may differ between browsers/devices and may be lost if browser data is cleared.</li>
+    <li>The dashboard's browser sound is controlled by the <b>Sound</b> button and is separate from the optional physical buzzer. Browser sound may require user interaction and a supported browser.</li>
+    <li>The firmware does not define a <code>DEVICE_ID</code> configuration variable. Do not follow instructions to edit one.</li>
+  </ul>
+  <div class="notice"><b>Privacy warning:</b> Do not enter real patient names, diagnoses, or other identifiable health information into this educational demonstration dashboard. It is not a validated or secured hospital record system.</div>
+</section>
+
+<section class="section">
+  <h2>08 · Troubleshooting</h2>
+  <div class="grid">
+    <div class="card"><h3>HX711 ERROR / sensor error</h3><p>Check HX711 power and ground, DOUT on D16, SCK on D4, and the load-cell wiring. Confirm the load cell is within its rated capacity and that readings are not saturated. Power-cycle only after checking wiring safely.</p></div>
+    <div class="card"><h3>Weight or volume is inaccurate</h3><p>Ensure the hook is empty before taring. Recalibrate with a known weight. Verify the empty bag/tubing weight, fluid density, and nominal bag volume. Compare readings against an independent scale.</p></div>
+    <div class="card"><h3>Readings are unstable</h3><p>Prevent the bag from swinging or touching nearby surfaces. Make sure cables and tubing do not pull on the load cell. Check the mounting and connections.</p></div>
+    <div class="card"><h3>Flow says zero / ETA is --</h3><p>The firmware needs a history of changing volume readings to estimate flow. Allow readings to accumulate, check for stable mechanical setup, and remember that a truly unchanging reading can produce no valid ETA.</p></div>
+    <div class="card"><h3>Dashboard will not open</h3><p>Confirm that your phone/computer is connected to the correct Wi-Fi network. Use the exact IP printed on the LCD or Serial Monitor and include <code>http://</code>. If router connection fails, the device should fall back to its hotspot.</p></div>
+    <div class="card"><h3>Browser sound is silent</h3><p>Press the dashboard's Sound button, check device volume, and ensure the browser allows audio. The uploaded firmware has <code>USE_BUZZER 0</code>, so the physical buzzer is disabled.</p></div>
+    <div class="card"><h3>Alarm or status seems incorrect</h3><p>Check the LCD/dashboard volume, percentage, configured thresholds, and sensor status. The firmware prioritizes sensor error, no bag, empty, critical, stopped-flow, low, then normal classification. Do not use the prototype to make patient-care decisions.</p></div>
+    <div class="card"><h3>Settings seem to revert</h3><p>Send <code>i</code> to inspect the active settings. Settings are saved to ESP32 flash; a firmware configuration-version change can reset the bag volume and empty-bag weight to defaults.</p></div>
+  </div>
+</section>
+
+<section class="section">
+  <h2>09 · Maintenance and Pre-Test Checklist</h2>
+  <ul class="check">
+    <li>Inspect the hook, load-cell mount, fasteners, and wires before each prototype test.</li>
+    <li>Keep electronics dry and protected from spills. Disconnect power before changing wiring.</li>
+    <li>Never exceed the load cell, hook, or mounting hardware rated capacity.</li>
+    <li>Re-tare with the hook empty after moving the device, and recalibrate after moving or replacing the load cell.</li>
+    <li>Verify displayed weight at several known loads using an independent scale.</li>
+    <li>Verify that the LCD displays readings and status messages and that the Wi-Fi dashboard connects.</li>
+    <li>Test status transitions and dashboard sound using a controlled, non-clinical test setup.</li>
+    <li>Do not assume an alert works unless it has been tested. The physical buzzer is disabled in this firmware.</li>
+    <li>Keep a record of firmware version, calibration date, test weights, results, and any hardware changes.</li>
+  </ul>
+  <div class="notice safe"><b>Before any demonstration:</b> Confirm that the setup is mechanically secure, the load cell is within capacity, calibration has been checked, the dashboard is connected, and everyone understands that this is a prototype only.</div>
+</section>
+
+<section class="section">
+  <h2>10 · Technical Reference</h2>
+  <table class="table">
+    <tr><th>Firmware setting</th><th>Configured value</th></tr>
+    <tr><td>Serial baud rate</td><td>115200</td></tr>
+    <tr><td>Sampling interval for flow history</td><td>5000 ms (5 seconds)</td></tr>
+    <tr><td>Flow history length</td><td>24 samples (about 2 minutes at the configured interval)</td></tr>
+    <tr><td>Stopped-flow timeout</td><td>3 minutes</td></tr>
+    <tr><td>Empty-volume threshold</td><td>5 mL</td></tr>
+    <tr><td>Sensor fault criterion</td><td>5 consecutive invalid/saturated readings in the measurement routine</td></tr>
+    <tr><td>Default low / critical thresholds</td><td>30% / 10%</td></tr>
+    <tr><td>Wi-Fi dashboard</td><td>Enabled in firmware; HTTP server on port 80</td></tr>
+    <tr><td>External status LEDs</td><td>Not used in this hardware build; firmware retains unused LED-control code</td></tr>
+    <tr><td>Physical buzzer</td><td>Disabled by <code>USE_BUZZER 0</code></td></tr>
+  </table>
+  <p class="small">This manual describes the uploaded source code. It does not certify the hardware, calibration accuracy, clinical performance, cybersecurity, or suitability for medical use. Re-check this manual whenever the firmware or hardware is changed.</p>
+</section>
+
+<div class="footer"><b>MediFlow · User Manual · Version 1.3</b><br>Prepared against the uploaded <code>mediflow_final (4)(1).ino</code> firmware. Educational prototype documentation only. Not for clinical use.</div>
+</main></body>
+
+</html>
